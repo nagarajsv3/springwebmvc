@@ -1,6 +1,6 @@
 1. We need only 3 Dependencies for the spring mvc application
     spring-webmvc, jstl, servlet-api
-1. How to run the apps on Jetty Server
+2. How to run the apps on Jetty Server
   1a. Add Maven Build Dependency
     <build>
           <plugins>
@@ -11,7 +11,7 @@
               </plugin>
   1b. Maven Run Settings
     jetty:run -Djetty.port=8888
-2. How to deploy applications on Tomcat
-   2a. Edit Configuration -> Select the tomcat home directory -> Select the JRE
+3. How to deploy applications on Tomcat
+   2a. Edit Configuration -> Tomcat Server -> Select the tomcat home directory -> Select the JRE
    2b. Deployment tab -> Add the application in the deployment section War file type.
    Run the tomcat. Application will automcatically run
