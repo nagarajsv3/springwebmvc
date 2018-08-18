@@ -12,4 +12,11 @@ public class HomeController {
         System.out.println("Received Load Home Page Request");
         return "index";
     }
+
+    @RequestMapping(value="/hi",method = RequestMethod.GET)
+    public String loadHiPage(){
+        System.out.println("Received Load Hi Page Request");
+        return "hi";
+    }
+
 }
