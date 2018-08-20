@@ -3,8 +3,10 @@ package com.nsv.teamapp.repositories;
 import com.nsv.teamapp.domains.Team;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,16 +15,24 @@ public class TeamDAO {
     
     @Autowired
     private SessionFactory sessionFactory;
-    
-    public void createOrUpdate(Team team){
+
+    public void create(Team team){
         Session session = sessionFactory.openSession();
         session.save(team);
         session.close();
     }
 
+    public void update(Team team){
+        Session session = sessionFactory.openSession();
+        session.update(team);
+        session.close();
+    }
+
     public Team getById(int id){
         Session session = sessionFactory.openSession();
-        Team team = session.load(Team.class, id);
+        Team team = (Team) session.load(Team.class, id);
+        team.update(team);
+        //session.update(team);
         session.close();
         return team;
     }
@@ -34,14 +44,12 @@ public class TeamDAO {
         return teams;
     }
 
-    public void delete(Team team){
+    public void delete(int id){
         Session session = sessionFactory.openSession();
-        session.delete(team);
+        Team byId = getById(id);
+        session.delete(byId);
+        session.flush();
         session.close();
     }
-
-
-
-
 
 }

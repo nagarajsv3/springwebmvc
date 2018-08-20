@@ -15,7 +15,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void createTeam(Team team) {
-        teamDAO.createOrUpdate(team);
+        teamDAO.create(team);
     }
 
     @Override
@@ -23,15 +23,18 @@ public class TeamServiceImpl implements TeamService {
         return teamDAO.getById(id);
     }
 
+
     @Override
     public void updateTeam(Team team) {
-        teamDAO.createOrUpdate(team);
+        teamDAO.update(team);
 
     }
 
+
+
     @Override
-    public void deleteTeam(Team team) {
-        teamDAO.delete(team);
+    public void deleteTeam(int id) {
+        teamDAO.delete(id);
     }
 
     @Override

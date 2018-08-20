@@ -15,3 +15,9 @@
    2a. Edit Configuration -> Tomcat Server -> Select the tomcat home directory -> Select the JRE
    2b. Deployment tab -> Add the application in the deployment section War file type.
    Run the tomcat. Application will automcatically run
+4. GenerationType.AUTO problems with Hibernate. Use @GenericGenerator(name="native", strategy="native")
+https://www.thoughts-on-java.org/5-things-you-need-to-know-when-using-hibernate-with-mysql/
+5. Hibernate the caches the queries. so perform session.flush() after update and delete.
+6. LazyInitializationException in Hibernate
+https://javarevisited.blogspot.com/2014/04/orghibernatelazyinitializationException-Could-not-initialize-proxy-no-session-hibernate-java.html
+http://forum.spring.io/forum/spring-projects/data/68701-lazyinitializationexception-hibernate-spring-help
