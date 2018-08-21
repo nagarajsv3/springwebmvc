@@ -51,3 +51,15 @@ Propagation
 3. Never
 4. Supports
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
+
+Programmatic Tx Mg :
+1. Transactional Template (Preferred)
+2. Platform Tx Mg
+
+Txn Template
+1. Create Txn Tem bean
+2. In the service class, define the Txn Tem variable
+3. Use Service Constructor to set the dependency with Platform Txn Mgr
+4. Whichever the method, you want to perform in Transaction, txntem.execute(Ananymous Inner type of TxnRollback() ) & override the doInTransaction method. Inside this method do the required operation and catch the exception and do the status.rollback if it occurs
+
+https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html
