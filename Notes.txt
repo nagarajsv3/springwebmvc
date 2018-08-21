@@ -21,3 +21,6 @@ https://www.thoughts-on-java.org/5-things-you-need-to-know-when-using-hibernate-
 6. LazyInitializationException in Hibernate
 https://javarevisited.blogspot.com/2014/04/orghibernatelazyinitializationException-Could-not-initialize-proxy-no-session-hibernate-java.html
 http://forum.spring.io/forum/spring-projects/data/68701-lazyinitializationexception-hibernate-spring-help
+7. Difference between Hibernate.get() vs Hibernate.load()
+8. Use <form:hidden value="${}" to pass the primary key
+<form:hidden path="id" value="${team.id}"/>

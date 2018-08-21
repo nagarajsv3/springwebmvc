@@ -46,4 +46,13 @@ public class Team {
         }
             this.rating=team.getRating();
     }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", rating=" + rating +
+                '}';
+    }
 }

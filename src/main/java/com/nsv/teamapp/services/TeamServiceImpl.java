@@ -4,9 +4,11 @@ import com.nsv.teamapp.domains.Team;
 import com.nsv.teamapp.repositories.TeamDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Service
 public class TeamServiceImpl implements TeamService {
 
@@ -15,7 +17,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void createTeam(Team team) {
-        teamDAO.create(team);
+        teamDAO.createOrUpdate(team);
     }
 
     @Override
@@ -26,7 +28,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void updateTeam(Team team) {
-        teamDAO.update(team);
+        teamDAO.createOrUpdate(team);
 
     }
 

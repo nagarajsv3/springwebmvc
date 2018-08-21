@@ -14,9 +14,13 @@
 </head>
 <body>
 <h1>ICC Ranking - Edit Team</h1>
-<form:form commandName="team" method="post" action="${pageContext.request.contextPath}/team/update/${team.id}">
+<form:form commandName="team" method="post" action="${pageContext.request.contextPath}/team/update">
 
     <table>
+        <tr>
+            <td><form:label path="id">Team ID</form:label></td>
+            <td><form:hidden path="id" value="${team.id}"/></td>
+        </tr>
         <tr>
             <td><form:label path="name">Team Name</form:label></td>
             <td><form:input path="name" /></td>

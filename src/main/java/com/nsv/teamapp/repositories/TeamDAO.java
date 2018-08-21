@@ -3,9 +3,10 @@ package com.nsv.teamapp.repositories;
 import com.nsv.teamapp.domains.Team;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,40 +17,40 @@ public class TeamDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void create(Team team){
-        Session session = sessionFactory.openSession();
-        session.save(team);
-        session.close();
+    public Session getSession(){
+        return sessionFactory.getCurrentSession();
     }
 
-    public void update(Team team){
-        Session session = sessionFactory.openSession();
-        session.update(team);
-        session.close();
+    @Transactional(isolation = Isolation.DEFAULT, rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRED)
+    public void createOrUpdate(Team team){
+        getSession().saveOrUpdate(team);
+        getSession().flush();
     }
 
+
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.SUPPORTS)
     public Team getById(int id){
-        Session session = sessionFactory.openSession();
-        Team team = (Team) session.load(Team.class, id);
-        team.update(team);
-        //session.update(team);
-        session.close();
+        Team team = (Team) getSession().get(Team.class, id);
         return team;
     }
 
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.SUPPORTS)
     public List<Team> getAll(){
-        Session session = sessionFactory.openSession();
-        List<Team> teams= session.createCriteria(Team.class).list();
-        session.close();
+        List<Team> teams= getSession().createCriteria(Team.class).list();
         return teams;
     }
 
+    @Transactional(isolation = Isolation.DEFAULT, rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRED)
     public void delete(int id){
-        Session session = sessionFactory.openSession();
         Team byId = getById(id);
-        session.delete(byId);
-        session.flush();
-        session.close();
+        getSession().delete(byId);
+        getSession().flush();
+    }
+
+    @Transactional(isolation = Isolation.DEFAULT, rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRES_NEW)
+    public void updateAndDelete(int id){
+        createOrUpdate(getById(id));
+        delete(id);
     }
 
 }

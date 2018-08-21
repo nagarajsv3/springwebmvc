@@ -34,17 +34,20 @@ public class TeamController {
     }
 
     @RequestMapping(value = "/edit/{teamid}",method = RequestMethod.GET)
-    public ModelAndView loadEditTeamPage(@PathVariable("teamid") Long teamid){
+    public ModelAndView loadEditTeamPage(@PathVariable("teamid") int teamid){
+        //System.out.println("edit-teamid-pathvar"+teamid);
+        Team team = teamService.getTeamById(teamid);
         ModelAndView modelAndView = new ModelAndView("edit");
-        modelAndView.addObject("team",new Team());
+        modelAndView.addObject("team",team);
         return modelAndView;
     }
 
-    @RequestMapping(value = "/update/{teamid}",method = RequestMethod.POST)
-    public ModelAndView performEditTeamOps(@PathVariable("teamid") int teamid, Team team){
-        Team teamById = teamService.getTeamById(teamid);
-        System.out.println(teamById.getName());
-        System.out.println(teamById);
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    public ModelAndView performEditTeamOps(Team team){
+        //System.out.println("post-team id"+team.getId());
+        //System.out.println("team"+team);
+        Team teamById = teamService.getTeamById(team.getId());
+        //System.out.println(teamById);
         teamById.update(team);
         teamService.updateTeam(teamById);
 

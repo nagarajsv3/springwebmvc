@@ -1,0 +1,53 @@
+Types
+1. Declarative Tx Mg (Container managed txns - Preferred)
+2. Programmatic Tx Mg (User managed txns)
+
+Transaction Properties (ACID)
+A-Atomic
+C-Consistent
+I-Isolation
+D-Durable
+
+Isolation Types
+Read Committed(Preferred)
+Read Uncommitted
+Default
+Repeated reads(Row Lock)
+serializable read (Table Lock)
+
+Read Types
+1. Dirty Read
+2. Phantom Read
+3. Repeatable reads
+4. Non repeatable reads(Preferred)
+
+Steps
+1. spring-tx maven dependency
+2. Use @Transactional annotation at service level (can be applied at class / method level)
+3. Define TransactionManager (Interface : PlatformTransactionManager)
+	3a. Java Config
+		1. Annotate Java Config with @EnableTransactionManagement
+		2. Define TransactionManager bean
+		@Bean
+		public PlatformTransactionManager getTransactionManager(){
+			return new HibernateTransactionManager(sessionFactory());
+		}
+	3b. XML Config
+		1. Add spring tx name and schema
+		1. Define <tx:annotation-driven /> element
+		2. Define TransactionManager bean
+
+	<tx:annotation-driven />
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+Propagation
+1. Required
+@Transactional(rollBackFor=RunTimeException.class, isolation=Isolation.DEFAULT, propagation=Propagation.REQUIRED)
+2. RequiresNew
+@Transactional(rollBackFor=RunTimeException.class, isolation=Isolation.DEFAULT, propagation=Propagation.REQUIRES_NEW)
+3. Never
+4. Supports
+@Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
