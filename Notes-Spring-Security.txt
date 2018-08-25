@@ -1,0 +1,36 @@
+1. LDAP - LightWeight Directory Access Protocol / Active Directory / DB
+2. Authentication vs Authorization
+
+Steps
+1. Add spring-security-web & spring-security-config & commons-logging maven dependency
+2. Configure filter springSecurityFilter using DelegatingFilterProxy Class
+ <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+3.Create spring-security.xml under webapp/WEB-INF with security namespace and xsd
+<!--    http interceptor intercepts the requests and does authentication-->
+    <security:http auto-config="true" use-expressions="false">
+            <security:intercept-url pattern="/**" access="ROLE_USER" />
+        </security:http>
+
+<!--    authentication manager defines the users who can access the application-->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="naga" authorities="ROLE_USER" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+4. Update the <context-param> with security-config.xml in the web.xml
+<!--    Location of the XML files that defines root application context
+    Applied by ContextLoaderListener-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/app-config.xml,/WEB-INF/security-config.xml</param-value>
+    </context-param>
