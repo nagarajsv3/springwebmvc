@@ -23,6 +23,7 @@ Steps
     <security:authentication-manager>
         <security:authentication-provider>
             <security:user-service>
+            <!--perform single user authentication -->
                 <security:user name="naga" authorities="ROLE_USER" />
             </security:user-service>
         </security:authentication-provider>
@@ -34,3 +35,28 @@ Steps
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:spring/app-config.xml,/WEB-INF/security-config.xml</param-value>
     </context-param>
+
+-------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------
+Multi User Database Authentication
+1. Copy security-config.xml to security-db-config.xml
+2. Update context-param in web.xml to point to security-db-config.xml
+3. Create users and authorities table
+// contains user information
+create table users(
+  username varchar(100) not null primary key,
+  password varchar(100) not null,
+  enabled boolean not null
+);
+
+//contains username and role which the user is in
+create table authorities(
+  username varchar(100) not null,
+  authority varchar(50) not null,
+  constraint fk_username_users
+  foreign key(username) references users(username)
+);
+
+//create unique index using username and authority
+create unique index idx_username on authorities(username, authority);
+
