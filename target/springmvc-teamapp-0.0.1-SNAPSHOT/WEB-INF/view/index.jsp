@@ -16,7 +16,8 @@
 <c:url value="/logout" var="logout"/>
 <h1>Teams Home Page</h1><br/> <a href="${logout}">Logout</a>
 
-<h6> Welcome <security:authentication property="principal.username"/></h6>
+<h6> Welcome <security:authentication property="principal"/>
+    <security:authentication property="principal.username"/></h6>
     <p>
         Context Path : <c:out value="${pageContext.request.contextPath}"/><br/>
         <security:authorize access="hasRole('ROLE_ADMIN')">

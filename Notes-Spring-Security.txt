@@ -201,3 +201,10 @@ Use Spring Security Tag Library to control the access to the resources based on 
 
     Add Team Message : ${message}
 </body>
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+Spring Method Level Security
+1. Add security namespace in the mvc-config.xml
+2. Enable method level security by     <security:global-method-security secured-annotations="enabled" />
+3. Annotate the method @Secured("ROLE_ADMIN")
