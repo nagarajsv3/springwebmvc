@@ -89,6 +89,7 @@ insert into authorities values('baba','ROLE_USER');
 
 -------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------
+Spring Security to Custom Login Page
 1. create security-custom-login-config.xml using security-db-config.xml
 Update <security:http> element
     <!--    http interceptor intercepts the requests and does authentication-->
@@ -116,3 +117,87 @@ Update <security:http> element
         return "redirect:/login";
     }
 4. Create jsp pages for accessDenied, login and logout
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h1>Login Page</h1>
+<c:url var="loginVal" value="/login"/>
+<form method="post" action="${loginVal}">
+    <table>
+        <tr>
+            <td>
+                User Name
+            </td>
+            <td>
+                <input type="text" name="username">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password
+            </td>
+            <td>
+                <input type="password" name="password">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="hidden" value="${_csrf.token}" name="${_csrf.parameterName}">
+                <input type="submit" value="Login">
+            </td>
+        </tr>
+
+    </table>
+
+</form>
+
+</body>
+</html>
+
+-------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+Use Spring Security Tag Library to control the access to the resources based on the role
+1. Add Maven Dependency for spring-security-taglibs
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-taglibs</artifactId>
+    <version>4.2.3.RELEASE</version>
+</dependency>
+2. Add security taglib custom tag
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+3. Enclose the resource you want to have special access
+        <security:authorize access="hasRole('ROLE_ADMIN')">
+            <a href="${pageContext.request.contextPath}/team/add">Add New Team</a><br/>
+        </security:authorize>
+4. Use <security:authentication property="principal"/> to fetch all the details about the user and his roles
+5. Use <security:authentication property="principal.username"/> to fetch only the user name
+6. Update index.jsp file
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<html>
+<head>
+    <title>Team Home</title>
+</head>
+<body>
+<c:url value="/logout" var="logout"/>
+<h1>Teams Home Page</h1><br/> <a href="${logout}">Logout</a>
+
+<h6> Welcome <security:authentication property="principal"/>
+    <security:authentication property="principal.username"/></h6>
+    <p>
+        Context Path : <c:out value="${pageContext.request.contextPath}"/><br/>
+        <security:authorize access="hasRole('ROLE_ADMIN')">
+            <a href="${pageContext.request.contextPath}/team/add">Add New Team</a><br/>
+        </security:authorize>
+        <a href="${pageContext.request.contextPath}/team/list">List Teams</a><br/>
+    </p>
+
+    Add Team Message : ${message}
+</body>
