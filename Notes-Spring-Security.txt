@@ -60,3 +60,59 @@ create table authorities(
 //create unique index using username and authority
 create unique index idx_username on authorities(username, authority);
 
+4.  Create users and authorities
+insert into users values('naga',  'admin', true);
+insert into users values('baba',  'admin', true);
+insert into authorities values('naga','ROLE_USER');
+insert into authorities values('baba','ROLE_USER');
+
+5. Configure authentication-manager in security-db-config.xml to use <security:jdbc-user-service>
+    <!--authentication manager - multi user authentication using db- <security:jdbc-user-service> dataSource is defined in app-config.xml-->
+    <!--    authentication manager defines the users who can access the application-->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:jdbc-user-service data-source-ref="dataSource"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+6. Defining Multiple Roles - Comma Separated User Roles
+    6a. Comma separated - Worked
+        <!--    http interceptor intercepts the requests and does authentication-->
+        <security:http auto-config="true" use-expressions="false">
+            <security:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN"/>
+        </security:http>
+
+    6b. Defining one more <security:intercept-url> element - Did not work
+            <!--Defining multiple roles-Using a new <security:intercept-url> element-->
+            <security:intercept-url pattern="/**" access="ROLE_USER"/>
+            <security:intercept-url pattern="/**" access="ROLE_ADMIN"/>
+
+-------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------
+1. create security-custom-login-config.xml using security-db-config.xml
+Update <security:http> element
+    <!--    http interceptor intercepts the requests and does authentication-->
+    <!-- use-expressons should be true; by default it is true-->
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/login" access="permitAll()"/>
+        <security:intercept-url pattern="/logout" access="permitAll()"/>
+        <security:intercept-url pattern="/accessDenied" access="permitAll()"/>
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+        <security:form-login login-page="/login" username-parameter="username" password-parameter="password"
+                             default-target-url="/" authentication-failure-url="/accessDenied" />
+    </security:http>
+2. Update <context-param> element in web.xml with security-custom-login-config.xml
+3. Create the LoginController with @Controller annotation
+//When user logsout kill the session
+    @RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
+    public String performLogout(HttpServletRequest request, HttpServletResponse response){
+        //kill the session
+        //load authentication object from Spring Security Context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null){
+            //perform a logout
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+        return "redirect:/login";
+    }
+4. Create jsp pages for accessDenied, login and logout

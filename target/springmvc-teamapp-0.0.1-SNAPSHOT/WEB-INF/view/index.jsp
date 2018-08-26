@@ -12,7 +12,8 @@
     <title>Team Home</title>
   </head>
   <body>
-    <h1>Teams Home Page</h1><br />
+  <c:url value="/logout" var="logout" />
+  <h1>Teams Home Page</h1><br /> <a href="${logout}">Logout</a>
   <p>
     Context Path : <c:out value="${pageContext.request.contextPath}" /><br />
     <a href="${pageContext.request.contextPath}/team/add">Add New Team</a><br />

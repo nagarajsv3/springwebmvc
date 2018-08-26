@@ -5,17 +5,13 @@
          version="3.1">
 
     <display-name>teamApplication</display-name>
-    <module-name>
-        team
-    </module-name>
-
 
 
 <!--    Location of the XML files that defines root application context
     Applied by ContextLoaderListener-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/security-config.xml,classpath:spring/app-config.xml</param-value>
+        <param-value>/WEB-INF/security-custom-login-config.xml,classpath:spring/app-config.xml</param-value>
     </context-param>
 
     <listener>

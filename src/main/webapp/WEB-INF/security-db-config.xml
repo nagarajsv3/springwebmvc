@@ -5,17 +5,23 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/security  http://www.springframework.org/schema/security/spring-security.xsd">
 
-<!--    http interceptor intercepts the requests and does authentication-->
+    <!--    http interceptor intercepts the requests and does authentication-->
     <security:http auto-config="true" use-expressions="false">
-        <security:intercept-url pattern="/**" access="ROLE_USER" />
+        <!--Defining multiple roles-Comma separated-->
+        <security:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN"/>
+        <!--Defining multiple roles-Using a new <security:intercept-url> element-->
+        <!--
+                <security:intercept-url pattern="/**" access="ROLE_USER"/>
+                <security:intercept-url pattern="/**" access="ROLE_ADMIN"/>
+        -->
     </security:http>
 
-<!--    authentication manager defines the users who can access the application-->
+
+    <!--authentication manager - multi user authentication using db- <security:jdbc-user-service> dataSource is defined in app-config.xml-->
+    <!--    authentication manager defines the users who can access the application-->
     <security:authentication-manager>
         <security:authentication-provider>
-            <security:user-service>
-                <security:user name="naga" authorities="ROLE_USER" password="admin" />
-            </security:user-service>
+            <security:jdbc-user-service data-source-ref="dataSource"/>
         </security:authentication-provider>
     </security:authentication-manager>
 

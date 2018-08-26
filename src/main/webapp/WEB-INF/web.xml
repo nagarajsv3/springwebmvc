@@ -11,7 +11,7 @@
     Applied by ContextLoaderListener-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/security-db-config.xml,classpath:spring/app-config.xml</param-value>
+        <param-value>/WEB-INF/security-custom-login-config.xml,classpath:spring/app-config.xml</param-value>
     </context-param>
 
     <listener>
