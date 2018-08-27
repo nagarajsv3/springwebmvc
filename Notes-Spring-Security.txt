@@ -208,3 +208,90 @@ Spring Method Level Security
 1. Add security namespace in the mvc-config.xml
 2. Enable method level security by     <security:global-method-security secured-annotations="enabled" />
 3. Annotate the method @Secured("ROLE_ADMIN")
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+using Encryption for passwords stored in DB and Configuring Spring to use it (MD5 & BCrypt)
+1. Encrypt the password
+Md5PasswordEncoder md5PasswordEncoder = new Md5PasswordEncoder();
+        String md5EncodedPassword = md5PasswordEncoder.encodePassword("admin", null);
+        System.out.println("MD5 Encoded="+md5EncodedPassword);
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String bcryptencoded = bCryptPasswordEncoder.encode("admin");
+        System.out.println("BCrypt Encoded="+bcryptencoded);
+        //$2a$10$cKSBEbhBtVjuUVvHra4Y9eGueyyR9llOEV8xFonM8UV3l41xLgBbq
+2. Update the db with the password
+update users set password='$2a$10$cKSBEbhBtVjuUVvHra4Y9eGueyyR9llOEV8xFonM8UV3l41xLgBbq' where username in ('naga','baba','varne');
+3. Create a security-encrypted-password-config.xml with <security:password-encoder>
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:password-encoder hash="bcrypt" />
+            <security:jdbc-user-service data-source-ref="dataSource"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+4. Update <context-param> in web.xml with security-encrypted-password-config.xml
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+Spring LDAP
+1. Add Maven Dependencies
+<dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.5.6</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.directory.server/apacheds-all -->
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-all</artifactId>
+            <version>1.5.5</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+
+2. Create the users.ldif file under resources
+3. Create security-ldap.xml
+    <security:ldap-server ldif="classpath:users.ldif" />
+    <security:authentication-manager>
+        <security:ldap-authentication-provider group-search-filter="member={0}" group-search-base="ou=groups" user-search-base="ou=people" user-search-filter="uid={0}" />
+    </security:authentication-manager>
+4. Update context-root in web.xml file
+
+-------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------
+Make our App use Https
+1. https uses ssl authentication - secured socket layer for communication
+2. Types of certs
+    a. self signed certs
+    b. Certificate providers like Digicert
+3. Generate certificate using keytool of JDK
+  C:\Nagaraj\Servers\apache-tomcat-7.0.81\apache-tomcat-7.0.81\bin>keytool -genkey -alias tomcat -keyalg RSA -keystore tomcat
+  Password : changeit
+  Fill SomeInfo
+4. Update the tomcat's server.xml file with keystore file location and password
+Default https port is 8443
+C:\Nagaraj\Servers\apache-tomcat-7.0.81\apache-tomcat-7.0.81\conf\server.xml
+<Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
+               maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS"
+			   keystoreFile="C:\Nagaraj\Servers\apache-tomcat-7.0.81\apache-tomcat-7.0.81\bin\tomcat"
+			   keystorePassword="changeit"/>
+5. Create security-ssl-login.xml file and update intercept-url attribute requires-channel="https"
+<security:http auto-config="true">
+        <security:intercept-url pattern="/login" access="permitAll()" requires-channel="https"/>
+        <security:intercept-url pattern="/logout" access="permitAll()" requires-channel="https"/>
+        <security:intercept-url pattern="/accessDenied" access="permitAll()" requires-channel="https"/>
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" requires-channel="https"/>
+        <security:form-login login-page="/login" username-parameter="username" password-parameter="password"
+                             default-target-url="/" authentication-failure-url="/accessDenied" />
+    </security:http>
+6. Update <context-param> of web.xml
+
+

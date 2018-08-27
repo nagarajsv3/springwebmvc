@@ -23,7 +23,16 @@ create table authorities(
 create unique index idx_username on authorities(username, authority);
 
 insert into users values('naga',  'admin', true);
+insert into users values('baba',  'admin', true);
+insert into users values('varne',  'admin', true);
 insert into authorities values('naga','ROLE_USER');
+insert into authorities values('baba','ROLE_USER');
+insert into authorities values('varne','ROLE_ADMIN');
+insert into authorities values('naga','ROLE_ADMIN');
+
+update users set password='$2a$10$cKSBEbhBtVjuUVvHra4Y9eGueyyR9llOEV8xFonM8UV3l41xLgBbq' where password='admin';
+
+
 select count(*) from mysql.user where user = 'root' and authentication_string is null;
 
 SELECT host, user, authentication_string FROM mysql.user;

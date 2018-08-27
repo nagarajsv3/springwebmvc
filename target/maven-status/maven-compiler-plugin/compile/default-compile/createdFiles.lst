@@ -1,1 +1,10 @@
+com\nsv\teamapp\services\TeamServiceImpl.class
+com\nsv\teamapp\services\TeamService.class
+com\nsv\teamapp\controllers\LoginController.class
+com\nsv\teamapp\controllers\TestController.class
+com\nsv\teamapp\repositories\TeamDAO.class
 com\nsv\teamapp\controllers\HomeController.class
+com\nsv\teamapp\controllers\TeamController.class
+com\nsv\teamapp\controllers\HelloController.class
+com\nsv\teamapp\domains\Team.class
+com\nsv\teamapp\aspects\LoggingAspect.class
